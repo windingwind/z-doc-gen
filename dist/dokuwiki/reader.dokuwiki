@@ -36,8 +36,19 @@ Reader class for managing reader tabs and windows
 
 ==== reader.registerEventListener(type, handler, [pluginID]) ⇒ void ====
 
-**Kind**: instance method of [[#Reader|Reader]]\\
-**Returns**: void - Inject DOM nodes to reader UI parts: - renderTextSelectionPopup - renderSidebarAnnotationHeader - renderToolbar
+**Kind**: instance method of [[#Reader|Reader]]
+
+^Param     ^Type                                      ^Description  ^
+|type      |[[#ReaderEventType|ReaderEventType]]      |Event type   |
+|handler   |[[#ReaderEventHandler|ReaderEventHandler]]|Event handler|
+|[pluginID]|string                                    |Plugin ID    |
+
+**Example**\\
+Inject DOM nodes to reader UI parts:
+
+  * renderTextSelectionPopup
+  * renderSidebarAnnotationHeader
+  * renderToolbar
 
 <code javascript>
 Zotero.Reader.registerEventListener('renderTextSelectionPopup', (event) => {
@@ -46,10 +57,17 @@ Zotero.Reader.registerEventListener('renderTextSelectionPopup', (event) => {
     container.append('Loading…');
     append(container);
     setTimeout(() => container.replaceChildren('Translated text: ' + params.annotation.text), 1000);
-});
+}, 'my-plugin@my-namespace.com');
 </code>
 
-Add options to context menus: - createColorContextMenu - createViewContextMenu - createAnnotationContextMenu - createThumbnailContextMenu - createSelectorContextMenu
+**Example**\\
+Add options to context menus:
+
+  * createColorContextMenu
+  * createViewContextMenu
+  * createAnnotationContextMenu
+  * createThumbnailContextMenu
+  * createSelectorContextMenu
 
 <code javascript>
 Zotero.Reader.registerEventListener('createAnnotationContextMenu', (event) => {
@@ -58,13 +76,8 @@ Zotero.Reader.registerEventListener('createAnnotationContextMenu', (event) => {
         label: 'Test',
         onCommand(){ reader._iframeWindow.alert('Selected annotations: ' + params.ids.join(', ')); }
     });
-});
+}, 'my-plugin@my-namespace.com');
 </code>
-
-^Param     ^Type                                      ^Description  ^
-|type      |[[#ReaderEventType|ReaderEventType]]      |Event type   |
-|handler   |[[#ReaderEventHandler|ReaderEventHandler]]|Event handler|
-|[pluginID]|string                                    |Plugin ID    |
 
 
 

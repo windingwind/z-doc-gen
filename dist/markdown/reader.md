@@ -40,7 +40,16 @@ Reader class for managing reader tabs and windows
 
 ### reader.registerEventListener(type, handler, [pluginID]) ⇒ <code>void</code>
 **Kind**: instance method of [<code>Reader</code>](#Reader)  
-**Returns**: <code>void</code> - Inject DOM nodes to reader UI parts:
+
+| Param | Type | Description |
+| --- | --- | --- |
+| type | [<code>ReaderEventType</code>](#ReaderEventType) | Event type |
+| handler | [<code>ReaderEventHandler</code>](#ReaderEventHandler) | Event handler |
+| [pluginID] | <code>string</code> | Plugin ID |
+
+**Example**  
+Inject DOM nodes to reader UI parts:
+
 - renderTextSelectionPopup
 - renderSidebarAnnotationHeader
 - renderToolbar
@@ -52,11 +61,11 @@ Zotero.Reader.registerEventListener('renderTextSelectionPopup', (event) => {
 	container.append('Loading…');
 	append(container);
 	setTimeout(() => container.replaceChildren('Translated text: ' + params.annotation.text), 1000);
-});
+}, 'my-plugin@my-namespace.com');
 ```
-
-
+**Example**  
 Add options to context menus:
+
 - createColorContextMenu
 - createViewContextMenu
 - createAnnotationContextMenu
@@ -70,15 +79,8 @@ Zotero.Reader.registerEventListener('createAnnotationContextMenu', (event) => {
 		label: 'Test',
 		onCommand(){ reader._iframeWindow.alert('Selected annotations: ' + params.ids.join(', ')); }
 	});
-});
-```  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| type | [<code>ReaderEventType</code>](#ReaderEventType) | Event type |
-| handler | [<code>ReaderEventHandler</code>](#ReaderEventHandler) | Event handler |
-| [pluginID] | <code>string</code> | Plugin ID |
-
+}, 'my-plugin@my-namespace.com');
+```
 <a name="Reader+unregisterEventListener"></a>
 
 ### reader.unregisterEventListener(type, handler) ⇒ <code>void</code>

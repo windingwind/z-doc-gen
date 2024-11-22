@@ -111,8 +111,8 @@ Register a custom item pane section.
 | options | <code>Object</code> | Section options. |
 | options.paneID | <code>string</code> | Unique pane ID. |
 | options.pluginID | <code>string</code> | Set plugin ID to auto-remove section when the plugin is disabled or removed. |
-| options.header | [<code>SectionL10n</code>](#SectionL10n) | Header options. Icon should be 16*16 and `label` need to be localized. |
-| options.sidenav | [<code>SectionIcon</code>](#SectionIcon) | Sidenav options.  Icon should be 20*20 and `tooltiptext` need to be localized. |
+| options.header | [<code>SectionL10n</code>](#SectionL10n) \| [<code>SectionIcon</code>](#SectionIcon) | Header options. Icon should be 16*16 and `label` need to be localized. |
+| options.sidenav | [<code>SectionL10n</code>](#SectionL10n) \| [<code>SectionIcon</code>](#SectionIcon) | Sidenav options.  Icon should be 20*20 and `tooltiptext` need to be localized. |
 | [options.bodyXHTML] | <code>string</code> | Pane body's innerHTML, defaults to XUL namespace. |
 | [options.onInit] | [<code>SectionInitHook</code>](#SectionInitHook) | Lifecycle hook called when section is initialized. Do: 1. Initialize data if necessary 2. Set up hooks, e.g. notifier callback Don't: 1. Render/refresh UI |
 | [options.onDestroy] | [<code>SectionBasicHook</code>](#SectionBasicHook) | Lifecycle hook called when section is destroyed. Do: 1. Remove data and release resource 2. Remove hooks, e.g. notifier callback Don't: 1. Render/refresh UI |
@@ -122,6 +122,52 @@ Register a custom item pane section.
 | [options.onToggle] | [<code>SectionToggleHook</code>](#SectionToggleHook) | Called when section is toggled. |
 | [options.sectionButtons] | [<code>Array.&lt;SectionButton&gt;</code>](#SectionButton) | Section button options. |
 
+**Example**  
+```javascript
+Zotero.ItemPaneManager.registerSection({
+	paneID: 'my-plugin-pane',
+	pluginID: 'my-plugin@my-namespace.com',
+	header: {
+		l10nID: 'my-plugin-pane-header', // Must inject the corresponding `ftl` file
+		icon: 'chrome://my-plugin/content/icon16.svg',
+	},
+	sidenav: {
+		l10nID: 'my-plugin-pane-sidenav', // Must inject the corresponding `ftl` file
+		icon: 'chrome://my-plugin/content/icon20.svg',
+	},
+	onInit: ({paneID, doc, body}) => {
+		// Initialize data
+		Zotero.debug('Section initialized');
+	},
+	onDestroy: ({paneID, doc, body}) => {
+		// Release resource
+		Zotero.debug('Section destroyed');
+	},
+	onItemChange: ({paneID, doc, body, item, tabType, editable, setEnabled}) => {
+		// In this example, the section is enabled only for regular items
+		setEnabled(item.isRegularItem());
+	},
+	onRender: ({doc, body, item}) => {
+		// Create elements and append them to `body`
+		const div = doc.createElement('div');
+		div.classList.add('my-plugin-section');
+		div.textContent = item.getField('title');
+		body.appendChild(div);
+	},
+	onAsyncRender: async ({body}) => {
+		// Put time-consuming rendering here
+		await new Promise(resolve => setTimeout(resolve, 1000));
+		body.querySelector('.my-plugin-section')?.style.setProperty('color', 'red');
+	},
+	onToggle: ({paneID, doc, body, item, tabType, editable, setEnabled}) => {
+		// Handle section toggle
+		Zotero.debug('Section toggled');
+	},
+	sectionButtons: [
+		// Section button will appear in the header
+	],
+});
+```
 <a name="Zotero.ItemPaneManager.unregisterSection"></a>
 
 #### ItemPaneManager.unregisterSection(paneID) ⇒ <code>boolean</code>
@@ -156,6 +202,30 @@ Register a custom item pane info section row.
 | [options.onSetData] | [<code>InfoRowSetDataHook</code>](#InfoRowSetDataHook) | Lifecycle hook for saving row data changes after editing. Do: 1. Save the new value of the row Don't: 1. Render/refresh UI 2. Change the value in this hook |
 | [options.onItemChange] | [<code>InfoRowItemChangeHook</code>](#InfoRowItemChangeHook) | Lifecycle hook for target item changes. Do: 1. Update the row attribute, e.g. enabled, editable Don't: 1. Render/refresh UI |
 
+**Example**  
+```javascript
+Zotero.ItemPaneManager.registerInfoRow({
+	rowID: 'my-plugin-row',
+	pluginID: 'my-plugin@my-namespace.com',
+	label: {
+		l10nID: 'my-plugin-row-label', // Must inject the corresponding `ftl` file
+	},
+	position: 'afterCreators',
+	multiline: true,
+	nowrap: false,
+	editable: true,
+	onGetData: ({rowID, item, tabType, editable}) => {
+		return item.getField('title').toUpperCase();
+	},
+	onSetData: ({rowID, item, tabType, editable, value}) => {
+		Zotero.debug('Info row data changed:', value);
+	},
+	onItemChange: ({rowID, item, tabType, editable, setEnabled, setEditable}) => {
+		// In this example, the row is enabled only for library tab
+		setEnabled(tabType === 'library');
+	},
+});
+```
 <a name="Zotero.ItemPaneManager.unregisterInfoRow"></a>
 
 #### ItemPaneManager.unregisterInfoRow(rowID) ⇒ <code>boolean</code>

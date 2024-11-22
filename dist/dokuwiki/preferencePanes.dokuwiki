@@ -44,6 +44,19 @@ The pane will be unregistered automatically when the registering plugin shuts do
 |[options.stylesheets]|Array.<string>|Array of URIs of CSS stylesheets to load along with the pane, optionally relative to the plugin’s root                                                              |
 |[options.helpURL]    |string        |If provided, a help button will be displayed under the pane and the provided URL will open when it is clicked                                                       |
 
+**Example**\\
+Register a pane with a script and stylesheet:
+
+<code javascript>
+Zotero.PreferencePanes.register({
+    pluginID: 'my-plugin@my-namespace.com',
+    src: rootURI + 'my-pane.xhtml',
+    id: 'my-plugin-pane',
+    scripts: [rootURI + 'my-pane.js'],
+    stylesheets: [rootURI + 'my-pane.css']
+});
+</code>
+
 
 
 === PreferencePanes.unregister(id) ===

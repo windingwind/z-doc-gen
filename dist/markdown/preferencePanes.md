@@ -45,6 +45,17 @@ shuts down.
 | [options.stylesheets] | <code>Array.&lt;string&gt;</code> | Array of URIs of CSS stylesheets to load along with the pane, optionally 		relative to the plugin's root |
 | [options.helpURL] | <code>string</code> | If provided, a help button will be displayed under the pane 		and the provided URL will open when it is clicked |
 
+**Example**  
+Register a pane with a script and stylesheet:
+```javascript
+Zotero.PreferencePanes.register({
+	pluginID: 'my-plugin@my-namespace.com',
+	src: rootURI + 'my-pane.xhtml',
+	id: 'my-plugin-pane',
+	scripts: [rootURI + 'my-pane.js'],
+	stylesheets: [rootURI + 'my-pane.css']
+});
+```
 <a name="Zotero.PreferencePanes.unregister"></a>
 
 #### PreferencePanes.unregister(id)

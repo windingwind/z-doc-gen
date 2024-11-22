@@ -48,4 +48,6 @@ async function main() {
   await convertAllMarkdownFiles();
 }
 
-main();
+main().catch((error) => {
+  console.error("An error occurred during conversion:", error);
+});

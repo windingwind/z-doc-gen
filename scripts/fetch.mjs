@@ -101,10 +101,10 @@ async function processFiles() {
   }
 }
 
-function main() {
-  processFiles().catch((error) => {
-    console.error("An error occurred:", error);
-  });
+async function main() {
+  await processFiles();
 }
 
-main();
+main().catch((error) => {
+  console.error("An error occurred during fetching:", error);
+});

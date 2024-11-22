@@ -45,13 +45,11 @@ async function generateMarkdownDocs(files) {
   }
 }
 
-async function compileJSDoc() {
-  try {
-    const jsFiles = await getJsFiles(DEST_FETCH_DIR);
-    await generateMarkdownDocs(jsFiles);
-  } catch (error) {
-    console.error("An error occurred during JSDoc compilation:", error);
-  }
+async function main() {
+  const jsFiles = await getJsFiles(DEST_FETCH_DIR);
+  await generateMarkdownDocs(jsFiles);
 }
 
-compileJSDoc();
+main().catch((error) => {
+  console.error("An error occurred during JSDoc compilation:", error);
+});

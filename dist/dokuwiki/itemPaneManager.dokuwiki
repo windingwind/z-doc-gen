@@ -1,0 +1,514 @@
+===== Objects =====
+
+
+Zotero : object
+
+===== Typedefs =====
+
+
+SectionIcon : Object
+
+SectionL10n : Object
+
+SectionButton : Object
+
+SectionBasicHookArgs : Object
+
+SectionUIHookArgs : Object
+
+SectionHookArgs : Object
+
+SectionInitHookArgs : Object
+
+SectionEventHookArgs : Object
+
+SectionInitHook ⇒ void
+
+SectionBasicHook : function
+
+SectionItemChangeHook ⇒ boolean
+
+SectionRenderHook ⇒ void
+
+SectionAsyncRenderHook ⇒ void | Promise.<void>
+
+SectionToggleHook ⇒ void
+
+SectionEventHook ⇒ void
+
+SetSectionL10nArgs ⇒ void
+
+SetEnabled ⇒ void
+
+SetSectionSummary ⇒ void
+
+SetSectionButtonStatus ⇒ void
+
+SectionRefresh ⇒ Promise.<void>
+
+InfoRowL10n : Object
+
+InfoRowPosition : "start" | "afterCreators" | "end"
+
+Position of the row.
+
+InfoRowGetDataHookArgs : Object
+
+InfoRowSetDataHookArgs : Object
+
+InfoRowItemChangeHookArgs : Object
+
+InfoRowGetDataHook ⇒ string
+
+InfoRowSetDataHook ⇒ void
+
+InfoRowItemChangeHook ⇒ void
+
+SetInfoRowEnabled ⇒ void
+
+SetInfoRowEditable ⇒ void
+
+
+
+===== Zotero : object =====
+
+**Kind**: global namespace
+
+  * [[#Zotero|Zotero]] : object
+    * [[#Zotero.ItemPaneManager|.ItemPaneManager]]
+      * [[#Zotero.ItemPaneManager.registerSection|.registerSection(options)]] ⇒ string | false
+      * [[#Zotero.ItemPaneManager.unregisterSection|.unregisterSection(paneID)]] ⇒ boolean
+      * [[#Zotero.ItemPaneManager.registerInfoRow|.registerInfoRow(options)]] ⇒ string | false
+      * [[#Zotero.ItemPaneManager.unregisterInfoRow|.unregisterInfoRow(rowID)]] ⇒ boolean
+      * [[#Zotero.ItemPaneManager.refreshInfoRow|.refreshInfoRow(rowID)]] ⇒ void
+
+
+
+==== Zotero.ItemPaneManager ====
+
+Manages item pane APIs.
+
+**Kind**: static property of [[#Zotero|Zotero]]
+
+  * [[#Zotero.ItemPaneManager|.ItemPaneManager]]
+    * [[#Zotero.ItemPaneManager.registerSection|.registerSection(options)]] ⇒ string | false
+    * [[#Zotero.ItemPaneManager.unregisterSection|.unregisterSection(paneID)]] ⇒ boolean
+    * [[#Zotero.ItemPaneManager.registerInfoRow|.registerInfoRow(options)]] ⇒ string | false
+    * [[#Zotero.ItemPaneManager.unregisterInfoRow|.unregisterInfoRow(rowID)]] ⇒ boolean
+    * [[#Zotero.ItemPaneManager.refreshInfoRow|.refreshInfoRow(rowID)]] ⇒ void
+
+
+
+=== ItemPaneManager.registerSection(options) ⇒ string | false ===
+
+Register a custom item pane section.
+
+**Kind**: static method of [[#Zotero.ItemPaneManager|ItemPaneManager]]\\
+**Returns**: string | false - - The registered pane ID or false if failed.
+
+^Param                   ^Type                                              ^Description                                                                                                                                                                                                                                            ^
+|options                 |Object                                            |Section options.                                                                                                                                                                                                                                       |
+|options.paneID          |string                                            |Unique pane ID.                                                                                                                                                                                                                                        |
+|options.pluginID        |string                                            |Set plugin ID to auto-remove section when the plugin is disabled or removed.                                                                                                                                                                           |
+|options.header          |[[#SectionL10n|SectionL10n]]                      |Header options. Icon should be 16*16 and ''%%label%%'' need to be localized.                                                                                                                                                                           |
+|options.sidenav         |[[#SectionIcon|SectionIcon]]                      |Sidenav options. Icon should be 20*20 and ''%%tooltiptext%%'' need to be localized.                                                                                                                                                                    |
+|[options.bodyXHTML]     |string                                            |Pane body’s innerHTML, defaults to XUL namespace.                                                                                                                                                                                                      |
+|[options.onInit]        |[[#SectionInitHook|SectionInitHook]]              |Lifecycle hook called when section is initialized. Do: 1. Initialize data if necessary 2. Set up hooks, e.g. notifier callback Don’t: 1. Render/refresh UI                                                                                             |
+|[options.onDestroy]     |[[#SectionBasicHook|SectionBasicHook]]            |Lifecycle hook called when section is destroyed. Do: 1. Remove data and release resource 2. Remove hooks, e.g. notifier callback Don’t: 1. Render/refresh UI                                                                                           |
+|[options.onItemChange]  |[[#SectionItemChangeHook|SectionItemChangeHook]]  |Lifecycle hook called when the section’s target item is changed. Do: 1. Update data (no need to render or refresh); 2. Update the section enabled state with ''%%props.setEnabled%%''. Don’t: 1. Render/refresh UI                                     |
+|options.onRender        |[[#SectionRenderHook|SectionRenderHook]]          |Lifecycle hook called for initial render. Cannot be async. Create elements and append them to ''%%props.body%%''. If the rendering is slow, you should make the bottleneck async and move it to ''%%onAsyncRender%%''.                                 |
+|[options.onAsyncRender] |[[#SectionAsyncRenderHook|SectionAsyncRenderHook]]|Lifecycle hook for asynchronous rendering. The best practice to time-consuming rendering with runtime decided section height is: 1. Compute height and create a box in sync ''%%onRender%%''; 2. Render actual contents in async ''%%onAsyncRender%%''.|
+|[options.onToggle]      |[[#SectionToggleHook|SectionToggleHook]]          |Called when section is toggled.                                                                                                                                                                                                                        |
+|[options.sectionButtons]|[[#SectionButton|Array.<SectionButton>]]          |Section button options.                                                                                                                                                                                                                                |
+
+
+
+=== ItemPaneManager.unregisterSection(paneID) ⇒ boolean ===
+
+Unregister a custom item pane section.
+
+**Kind**: static method of [[#Zotero.ItemPaneManager|ItemPaneManager]]\\
+**Returns**: boolean - - True if the section is successfully unregistered, false if the paneID is not found.
+
+^Param ^Type  ^Description                                                                  ^
+|paneID|string|Pane ID to unregister. This is the value returned by ''%%registerSection%%''.|
+
+
+
+=== ItemPaneManager.registerInfoRow(options) ⇒ string | false ===
+
+Register a custom item pane info section row.
+
+**Kind**: static method of [[#Zotero.ItemPaneManager|ItemPaneManager]]\\
+**Returns**: string | false - - The registered row ID or false if failed.
+
+^Param                 ^Type                                            ^Description                                                                                                                                                ^
+|options               |Object                                          |Row options.                                                                                                                                               |
+|options.rowID         |string                                          |Unique row ID.                                                                                                                                             |
+|options.pluginID      |string                                          |Set plugin ID to auto-remove row when the plugin is disabled or removed.                                                                                   |
+|options.label         |[[#InfoRowL10n|InfoRowL10n]]                    |Label options. ''%%label%%'' need to be localized.                                                                                                         |
+|[options.position]    |[[#InfoRowPosition|InfoRowPosition]]            |Position of the row.                                                                                                                                       |
+|[options.multiline]   |boolean                                         |Whether the row is multiline.                                                                                                                              |
+|[options.nowrap]      |boolean                                         |Whether the row is nowrap.                                                                                                                                 |
+|[options.editable]    |boolean                                         |Whether the row is editable.                                                                                                                               |
+|options.onGetData     |[[#InfoRowGetDataHook|InfoRowGetDataHook]]      |Lifecycle hook for getting row data for rendering. This is called when the row is rendered or refreshed.                                                   |
+|[options.onSetData]   |[[#InfoRowSetDataHook|InfoRowSetDataHook]]      |Lifecycle hook for saving row data changes after editing. Do: 1. Save the new value of the row Don’t: 1. Render/refresh UI 2. Change the value in this hook|
+|[options.onItemChange]|[[#InfoRowItemChangeHook|InfoRowItemChangeHook]]|Lifecycle hook for target item changes. Do: 1. Update the row attribute, e.g. enabled, editable Don’t: 1. Render/refresh UI                                |
+
+
+
+=== ItemPaneManager.unregisterInfoRow(rowID) ⇒ boolean ===
+
+Unregister a custom item pane info section row.
+
+**Kind**: static method of [[#Zotero.ItemPaneManager|ItemPaneManager]]\\
+**Returns**: boolean - - True if the row is successfully unregistered, false if the rowID is not found.
+
+^Param^Type  ^Description                                                                 ^
+|rowID|string|Row ID to unregister. This is the value returned by ''%%registerInfoRow%%''.|
+
+
+
+=== ItemPaneManager.refreshInfoRow(rowID) ⇒ void ===
+
+Refresh a custom item pane info section row.
+
+**Kind**: static method of [[#Zotero.ItemPaneManager|ItemPaneManager]]
+
+^Param^Type  ^Description                                                              ^
+|rowID|string|Row ID to refresh. This is the value returned by ''%%registerInfoRow%%''.|
+
+
+
+===== SectionIcon : Object =====
+
+**Kind**: global typedef\\
+**Properties**
+
+^Name      ^Type  ^Description                                         ^
+|icon      |string|Icon URI.                                           |
+|[darkIcon]|string|Icon URI in dark mode. If not set, use ''%%icon%%''.|
+
+
+
+===== SectionL10n : Object =====
+
+**Kind**: global typedef\\
+**Properties**
+
+^Name      ^Type  ^Description                                           ^
+|l10nID    |string|data-l10n-id for localization of section header label.|
+|[l10nArgs]|string|data-l10n-args for localization.                      |
+
+
+
+===== SectionButton : Object =====
+
+**Kind**: global typedef\\
+**Properties**
+
+^Name      ^Type                                  ^Description                                          ^
+|type      |string                                |Button type, must be valid DOMString and without “,”.|
+|icon      |string                                |Icon URI.                                            |
+|[darkIcon]|string                                |Icon URI in dark mode. If not set, use ''%%icon%%''. |
+|[l10nID]  |string                                |data-l10n-id for localization of button tooltiptext. |
+|onClick   |[[#SectionEventHook|SectionEventHook]]|Button click callback.                               |
+
+
+
+===== SectionBasicHookArgs : Object =====
+
+**Kind**: global typedef\\
+**Properties**
+
+^Name  ^Type          ^Description         ^
+|paneID|string        |Registered pane id. |
+|doc   |Document      |Document of section.|
+|body  |HTMLDivElement|Section body.       |
+
+
+
+===== SectionUIHookArgs : Object =====
+
+**Kind**: global typedef\\
+**Properties**
+
+^Name                  ^Type                                              ^Description                                         ^
+|item                  |Zotero.Item                                       |Current item.                                       |
+|tabType               |string                                            |Current tab type.                                   |
+|editable              |boolean                                           |Whether the section is in edit mode.                |
+|setL10nArgs           |[[#SetSectionL10nArgs|SetSectionL10nArgs]]        |Set l10n args for section header.                   |
+|setEnabled            |[[#SetEnabled|SetEnabled]]                        |Set pane enabled state.                             |
+|setSectionSummary     |[[#SetSectionSummary|SetSectionSummary]]          |Set pane section summary, shown in collapsed header.|
+|setSectionButtonStatus|[[#SetSectionButtonStatus|SetSectionButtonStatus]]|Set pane section button status.                     |
+
+
+
+===== SectionHookArgs : Object =====
+
+**Kind**: global typedef\\
+**Properties**
+
+^Name                  ^Type                                              ^Description                                         ^
+|paneID                |string                                            |Registered pane id.                                 |
+|doc                   |Document                                          |Document of section.                                |
+|body                  |HTMLDivElement                                    |Section body.                                       |
+|item                  |Zotero.Item                                       |Current item.                                       |
+|tabType               |string                                            |Current tab type.                                   |
+|editable              |boolean                                           |Whether the section is in edit mode.                |
+|setL10nArgs           |[[#SetSectionL10nArgs|SetSectionL10nArgs]]        |Set l10n args for section header.                   |
+|setEnabled            |[[#SetEnabled|SetEnabled]]                        |Set pane enabled state.                             |
+|setSectionSummary     |[[#SetSectionSummary|SetSectionSummary]]          |Set pane section summary, shown in collapsed header.|
+|setSectionButtonStatus|[[#SetSectionButtonStatus|SetSectionButtonStatus]]|Set pane section button status.                     |
+
+
+
+===== SectionInitHookArgs : Object =====
+
+**Kind**: global typedef\\
+**Properties**
+
+^Name                  ^Type                                              ^Description                                                                                                                                                                                                                      ^
+|paneID                |string                                            |Registered pane id.                                                                                                                                                                                                              |
+|doc                   |Document                                          |Document of section.                                                                                                                                                                                                             |
+|body                  |HTMLDivElement                                    |Section body.                                                                                                                                                                                                                    |
+|item                  |Zotero.Item                                       |Current item.                                                                                                                                                                                                                    |
+|tabType               |string                                            |Current tab type.                                                                                                                                                                                                                |
+|editable              |boolean                                           |Whether the section is in edit mode.                                                                                                                                                                                             |
+|setL10nArgs           |[[#SetSectionL10nArgs|SetSectionL10nArgs]]        |Set l10n args for section header.                                                                                                                                                                                                |
+|setEnabled            |[[#SetEnabled|SetEnabled]]                        |Set pane enabled state.                                                                                                                                                                                                          |
+|setSectionSummary     |[[#SetSectionSummary|SetSectionSummary]]          |Set pane section summary, shown in collapsed header.                                                                                                                                                                             |
+|setSectionButtonStatus|[[#SetSectionButtonStatus|SetSectionButtonStatus]]|Set pane section button status.                                                                                                                                                                                                  |
+|refresh               |[[#SectionRefresh|SectionRefresh]]                |Refresh the section. A ''%%refresh%%'' is exposed to plugins to allows plugins to refresh the section when necessary, e.g. item modify notifier callback. Note that calling ''%%refresh%%'' during initialization have no effect.|
+
+
+
+===== SectionEventHookArgs : Object =====
+
+**Kind**: global typedef\\
+**Properties**
+
+^Name                  ^Type                                              ^Description                                         ^
+|paneID                |string                                            |Registered pane id.                                 |
+|doc                   |Document                                          |Document of section.                                |
+|body                  |HTMLDivElement                                    |Section body.                                       |
+|item                  |Zotero.Item                                       |Current item.                                       |
+|tabType               |string                                            |Current tab type.                                   |
+|editable              |boolean                                           |Whether the section is in edit mode.                |
+|setL10nArgs           |[[#SetSectionL10nArgs|SetSectionL10nArgs]]        |Set l10n args for section header.                   |
+|setEnabled            |[[#SetEnabled|SetEnabled]]                        |Set pane enabled state.                             |
+|setSectionSummary     |[[#SetSectionSummary|SetSectionSummary]]          |Set pane section summary, shown in collapsed header.|
+|setSectionButtonStatus|[[#SetSectionButtonStatus|SetSectionButtonStatus]]|Set pane section button status.                     |
+|event                 |Event                                             |Event object.                                       |
+
+
+
+===== SectionInitHook ⇒ void =====
+
+**Kind**: global typedef
+
+^Param^Type                                        ^Description                                  ^
+|props|[[#SectionInitHookArgs|SectionInitHookArgs]]|Props provided during section initialization.|
+
+
+
+===== SectionBasicHook : function =====
+
+**Kind**: global typedef
+
+^Param^Type                                          ^Description          ^
+|props|[[#SectionBasicHookArgs|SectionBasicHookArgs]]|Basic hook arguments.|
+
+
+
+===== SectionItemChangeHook ⇒ boolean =====
+
+**Kind**: global typedef
+
+^Param^Type                                ^Description                     ^
+|props|[[#SectionHookArgs|SectionHookArgs]]|Hook arguments for item changes.|
+
+
+
+===== SectionRenderHook ⇒ void =====
+
+**Kind**: global typedef
+
+^Param^Type                                ^Description                  ^
+|props|[[#SectionHookArgs|SectionHookArgs]]|Hook arguments for rendering.|
+
+
+
+===== SectionAsyncRenderHook ⇒ void | Promise.<void> =====
+
+**Kind**: global typedef
+
+^Param^Type                                ^Description                               ^
+|props|[[#SectionHookArgs|SectionHookArgs]]|Hook arguments for asynchronous rendering.|
+
+
+
+===== SectionToggleHook ⇒ void =====
+
+**Kind**: global typedef
+
+^Param^Type                                          ^Description          ^
+|props|[[#SectionEventHookArgs|SectionEventHookArgs]]|Event hook arguments.|
+
+
+
+===== SectionEventHook ⇒ void =====
+
+**Kind**: global typedef
+
+^Param^Type                                          ^Description          ^
+|props|[[#SectionEventHookArgs|SectionEventHookArgs]]|Event hook arguments.|
+
+
+
+===== SetSectionL10nArgs ⇒ void =====
+
+**Kind**: global typedef
+
+^Param   ^Type  ^Description            ^
+|l10nArgs|string|Localization arguments.|
+
+
+
+===== SetEnabled ⇒ void =====
+
+**Kind**: global typedef
+
+^Param  ^Type   ^Description   ^
+|enabled|boolean|Enabled state.|
+
+
+
+===== SetSectionSummary ⇒ void =====
+
+**Kind**: global typedef
+
+^Param  ^Type  ^Description                        ^
+|summary|string|The summary for the section header.|
+
+
+
+===== SetSectionButtonStatus ⇒ void =====
+
+**Kind**: global typedef
+
+^Param             ^Type   ^Description                    ^
+|buttonType        |string |The button type.               |
+|options           |Object |Options for the button status. |
+|[options.disabled]|boolean|Whether the button is disabled.|
+|[options.hidden]  |boolean|Whether the button is hidden.  |
+
+
+
+===== SectionRefresh ⇒ Promise.<void> =====
+
+**Kind**: global typedef\\
+
+
+===== InfoRowL10n : Object =====
+
+**Kind**: global typedef\\
+**Properties**
+
+^Name  ^Type  ^Description                                ^
+|l10nID|string|data-l10n-id for localization of row label.|
+
+
+
+===== InfoRowPosition : "start" | "afterCreators" | "end" =====
+
+Position of the row.
+
+**Kind**: global typedef\\
+
+
+===== InfoRowGetDataHookArgs : Object =====
+
+**Kind**: global typedef\\
+**Properties**
+
+^Name    ^Type       ^Description                     ^
+|rowID   |string     |Row ID.                         |
+|item    |Zotero.Item|Current item.                   |
+|tabType |string     |Current tab type.               |
+|editable|boolean    |Whether the row is in edit mode.|
+
+
+
+===== InfoRowSetDataHookArgs : Object =====
+
+**Kind**: global typedef\\
+**Properties**
+
+^Name    ^Type       ^Description                     ^
+|rowID   |string     |Row ID.                         |
+|item    |Zotero.Item|Current item.                   |
+|tabType |string     |Current tab type.               |
+|editable|string     |Whether the row is in edit mode.|
+|value   |string     |New value.                      |
+
+
+
+===== InfoRowItemChangeHookArgs : Object =====
+
+**Kind**: global typedef\\
+**Properties**
+
+^Name       ^Type                                      ^Description                     ^
+|rowID      |string                                    |Row ID.                         |
+|item       |Zotero.Item                               |Current item.                   |
+|tabType    |string                                    |Current tab type.               |
+|editable   |boolean                                   |Whether the row is in edit mode.|
+|setEnabled |[[#SetInfoRowEnabled|SetInfoRowEnabled]]  |Set row enabled state.          |
+|setEditable|[[#SetInfoRowEditable|SetInfoRowEditable]]|Set row editable state.         |
+
+
+
+===== InfoRowGetDataHook ⇒ string =====
+
+**Kind**: global typedef\\
+**Returns**: string - - Row data.
+
+^Param^Type                                              ^Description                     ^
+|props|[[#InfoRowGetDataHookArgs|InfoRowGetDataHookArgs]]|Hook arguments for getting data.|
+
+
+
+===== InfoRowSetDataHook ⇒ void =====
+
+**Kind**: global typedef
+
+^Param^Type                                              ^Description                     ^
+|props|[[#InfoRowSetDataHookArgs|InfoRowSetDataHookArgs]]|Hook arguments for setting data.|
+
+
+
+===== InfoRowItemChangeHook ⇒ void =====
+
+**Kind**: global typedef
+
+^Param^Type                                                    ^Description                     ^
+|props|[[#InfoRowItemChangeHookArgs|InfoRowItemChangeHookArgs]]|Hook arguments for item changes.|
+
+
+
+===== SetInfoRowEnabled ⇒ void =====
+
+**Kind**: global typedef
+
+^Param  ^Type   ^Description   ^
+|enabled|boolean|Enabled state.|
+
+
+
+===== SetInfoRowEditable ⇒ void =====
+
+**Kind**: global typedef
+
+^Param   ^Type   ^Description    ^
+|editable|boolean|Editable state.|

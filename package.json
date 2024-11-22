@@ -1,0 +1,16 @@
+{
+  "name": "z-doc-gen",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "node scripts/fetch.mjs && node scripts/compile.mjs && node scripts/convert.mjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "devDependencies": {
+    "@octokit/rest": "^21.0.2",
+    "jsdoc-to-markdown": "^9.0.5"
+  }
+}

@@ -1,0 +1,125 @@
+===== Classes =====
+
+
+Reader
+
+Reader class for managing reader tabs and windows
+
+===== Objects =====
+
+
+Zotero : object
+
+===== Typedefs =====
+
+
+ReaderEventType : "renderTextSelectionPopup" | "renderSidebarAnnotationHeader" | "renderToolbar" | "createColorContextMenu" | "createViewContextMenu" | "createAnnotationContextMenu" | "createThumbnailContextMenu" | "createSelectorContextMenu"
+
+ReaderEvent : Object
+
+ReaderEventHandler ⇒ void
+
+
+
+===== Reader =====
+
+Reader class for managing reader tabs and windows
+
+**Kind**: global class
+
+  * [[#Reader|Reader]]
+    * [[#Reader+registerEventListener|.registerEventListener(type, handler, [pluginID])]] ⇒ void
+    * [[#Reader+unregisterEventListener|.unregisterEventListener(type, handler)]] ⇒ void
+    * [[#Reader+triggerAnnotationsImportCheck|.triggerAnnotationsImportCheck(itemID)]] ⇒ Promise
+
+
+
+==== reader.registerEventListener(type, handler, [pluginID]) ⇒ void ====
+
+**Kind**: instance method of [[#Reader|Reader]]\\
+**Returns**: void - Inject DOM nodes to reader UI parts: - renderTextSelectionPopup - renderSidebarAnnotationHeader - renderToolbar
+
+<code javascript>
+Zotero.Reader.registerEventListener('renderTextSelectionPopup', (event) => {
+    let { reader, doc, params, append } = event;
+    let container = doc.createElement('div');
+    container.append('Loading…');
+    append(container);
+    setTimeout(() => container.replaceChildren('Translated text: ' + params.annotation.text), 1000);
+});
+</code>
+
+Add options to context menus: - createColorContextMenu - createViewContextMenu - createAnnotationContextMenu - createThumbnailContextMenu - createSelectorContextMenu
+
+<code javascript>
+Zotero.Reader.registerEventListener('createAnnotationContextMenu', (event) => {
+    let { reader, params, append } = event;
+    append({
+        label: 'Test',
+        onCommand(){ reader._iframeWindow.alert('Selected annotations: ' + params.ids.join(', ')); }
+    });
+});
+</code>
+
+^Param     ^Type                                      ^Description  ^
+|type      |[[#ReaderEventType|ReaderEventType]]      |Event type   |
+|handler   |[[#ReaderEventHandler|ReaderEventHandler]]|Event handler|
+|[pluginID]|string                                    |Plugin ID    |
+
+
+
+==== reader.unregisterEventListener(type, handler) ⇒ void ====
+
+**Kind**: instance method of [[#Reader|Reader]]
+
+^Param  ^Type                                      ^Description  ^
+|type   |[[#ReaderEventType|ReaderEventType]]      |Event type   |
+|handler|[[#ReaderEventHandler|ReaderEventHandler]]|Event handler|
+
+
+
+==== reader.triggerAnnotationsImportCheck(itemID) ⇒ Promise ====
+
+Trigger annotations import
+
+**Kind**: instance method of [[#Reader|Reader]]
+
+^Param ^Type   ^Description       ^
+|itemID|Integer|Attachment item id|
+
+
+
+===== Zotero : object =====
+
+**Kind**: global namespace\\
+
+
+==== Zotero.Reader : Reader ====
+
+**Kind**: static property of [[#Zotero|Zotero]]\\
+
+
+===== ReaderEventType : "renderTextSelectionPopup" | "renderSidebarAnnotationHeader" | "renderToolbar" | "createColorContextMenu" | "createViewContextMenu" | "createAnnotationContextMenu" | "createThumbnailContextMenu" | "createSelectorContextMenu" =====
+
+**Kind**: global typedef\\
+
+
+===== ReaderEvent : Object =====
+
+**Kind**: global typedef\\
+**Properties**
+
+^Name  ^Type          ^Description     ^
+|reader|ReaderInstance|Reader instance |
+|doc   |Document      |Document        |
+|params|Object        |Event parameters|
+|append|function      |Append function |
+
+
+
+===== ReaderEventHandler ⇒ void =====
+
+**Kind**: global typedef
+
+^Param^Type                        ^Description^
+|event|[[#ReaderEvent|ReaderEvent]]|Event      |

@@ -1,0 +1,134 @@
+===== Objects =====
+
+
+Zotero : object
+
+===== Typedefs =====
+
+
+ItemTreeColumnDataProvider ⇒ string
+
+ItemTreeColumnRenderCell ⇒ HTMLElement
+
+
+
+===== Zotero : object =====
+
+**Kind**: global namespace
+
+  * [[#Zotero|Zotero]] : object
+    * [[#Zotero.ItemTreeManager|.ItemTreeManager]]
+      * [[#Zotero.ItemTreeManager.registerColumn|.registerColumn(option)]] ⇒ string | false
+      * <del>[[#Zotero.ItemTreeManager.registerColumns|.registerColumns()]]</del>
+      * [[#Zotero.ItemTreeManager.unregisterColumn|.unregisterColumn(dataKey)]] ⇒ boolean
+      * <del>[[#Zotero.ItemTreeManager.unregisterColumns|.unregisterColumns()]]</del>
+      * [[#Zotero.ItemTreeManager.refreshColumns|.refreshColumns()]] ⇒ void
+
+
+
+==== Zotero.ItemTreeManager ====
+
+Manages item tree APIs.
+
+**Kind**: static property of [[#Zotero|Zotero]]
+
+  * [[#Zotero.ItemTreeManager|.ItemTreeManager]]
+    * [[#Zotero.ItemTreeManager.registerColumn|.registerColumn(option)]] ⇒ string | false
+    * <del>[[#Zotero.ItemTreeManager.registerColumns|.registerColumns()]]</del>
+    * [[#Zotero.ItemTreeManager.unregisterColumn|.unregisterColumn(dataKey)]] ⇒ boolean
+    * <del>[[#Zotero.ItemTreeManager.unregisterColumns|.unregisterColumns()]]</del>
+    * [[#Zotero.ItemTreeManager.refreshColumns|.refreshColumns()]] ⇒ void
+
+
+
+=== ItemTreeManager.registerColumn(option) ⇒ string | false ===
+
+Register a custom column, must be valid with a unique dataKey.
+
+Note that the ''%%dataKey%%'' you use here may be different from the one returned by the function. This is because the ''%%dataKey%%'' is prefixed with the ''%%pluginID%%'' to avoid conflicts after the column is registered.
+
+**Kind**: static method of [[#Zotero.ItemTreeManager|ItemTreeManager]]\\
+**Returns**: string | false - - The dataKey of the added column or false if no column is added
+
+^Param                       ^Type                                                      ^Default^Description                                                                                                         ^
+|option                      |Object                                                    |       |An option or array of options to register                                                                           |
+|option.dataKey              |string                                                    |       |Required, see use in ItemTree#_getRowData()                                                                         |
+|option.label                |string                                                    |       |The column label. Either a string or the id to an i18n string.                                                      |
+|option.pluginID             |string                                                    |       |Set plugin ID to auto remove column when plugin is removed.                                                         |
+|[option.enabledTreeIDs]     |Array.<string>                                            |[]     |Which tree ids the column should be enabled in. If undefined, enabled in main tree. If [“*”], enabled in all trees. |
+|[option.defaultIn]          |Array.<string>                                            |       |Will be deprecated. Types of trees the column is default in. Can be [default, feed];                                |
+|[option.disabledIn]         |Array.<string>                                            |       |Will be deprecated. Types of trees where the column is not available                                                |
+|[option.sortReverse]        |boolean                                                   |false  |Default: false. Set to true to reverse the sort order                                                               |
+|[option.flex]               |number                                                    |1      |Default: 1. When the column is added to the tree how much space it should occupy as a flex ratio                    |
+|[option.width]              |string                                                    |       |A column width instead of flex ratio. See above.                                                                    |
+|[option.fixedWidth]         |boolean                                                   |       |Default: false. Set to true to disable column resizing                                                              |
+|[option.staticWidth]        |boolean                                                   |       |Default: false. Set to true to prevent columns from changing width when the width of the tree increases or decreases|
+|[option.noPadding]          |boolean                                                   |       |Set to true for columns with padding disabled in stylesheet                                                         |
+|[option.minWidth]           |number                                                    |       |Override the default [20px] column min-width for resizing                                                           |
+|[option.iconLabel]          |React.Component                                           |       |Set an Icon label instead of a text-based one                                                                       |
+|[option.iconPath]           |string                                                    |       |Set an Icon path, overrides {iconLabel}                                                                             |
+|[option.htmlLabel]          |string | React.Component                                  |       |Set an HTML label, overrides {iconLabel} and {label}. Can be a HTML string or a React component.                    |
+|[option.showInColumnPicker] |boolean                                                   |true   |Default: true. Set to true to show in column picker.                                                                |
+|[option.columnPickerSubMenu]|boolean                                                   |false  |Default: false. Set to true to display the column in “More Columns” submenu of column picker.                       |
+|[option.primary]            |boolean                                                   |       |Should only be one column at the time. Title is the primary column                                                  |
+|[option.dataProvider]       |[[#ItemTreeColumnDataProvider|ItemTreeColumnDataProvider]]|       |Custom data provider that is called when rendering cells                                                            |
+|[option.renderCell]         |[[#ItemTreeColumnRenderCell|ItemTreeColumnRenderCell]]    |       |The cell renderer function                                                                                          |
+|[option.zoteroPersist]      |Array.<string>                                            |       |Which column properties should be persisted between zotero close                                                    |
+
+
+
+=== ItemTreeManager.registerColumns() ===
+
+**//Deprecated//**
+
+**Kind**: static method of [[#Zotero.ItemTreeManager|ItemTreeManager]]\\
+
+
+=== ItemTreeManager.unregisterColumn(dataKey) ⇒ boolean ===
+
+Unregister a custom column.
+
+**Kind**: static method of [[#Zotero.ItemTreeManager|ItemTreeManager]]\\
+**Returns**: boolean - - true if the column was unregistered, false if the column was not found
+
+^Param  ^Type  ^Description                            ^
+|dataKey|string|The dataKey of the column to unregister|
+
+
+
+=== ItemTreeManager.unregisterColumns() ===
+
+**//Deprecated//**
+
+**Kind**: static method of [[#Zotero.ItemTreeManager|ItemTreeManager]]\\
+
+
+=== ItemTreeManager.refreshColumns() ⇒ void ===
+
+Refresh the columns in the item tree
+
+**Kind**: static method of [[#Zotero.ItemTreeManager|ItemTreeManager]]\\
+
+
+===== ItemTreeColumnDataProvider ⇒ string =====
+
+**Kind**: global typedef\\
+**Returns**: string - - The data to display in the column
+
+^Param  ^Type       ^Description              ^
+|item   |Zotero.Item|The item to get data from|
+|dataKey|string     |The dataKey of the column|
+
+
+
+===== ItemTreeColumnRenderCell ⇒ HTMLElement =====
+
+**Kind**: global typedef\\
+**Returns**: HTMLElement - - The HTML to display in the cell
+
+^Param        ^Type                          ^Description                      ^
+|index        |number                        |The index of the row             |
+|data         |string                        |The data to display in the column|
+|column       |ItemTreeColumnOptions | Object|The column options               |
+|isFirstColumn|boolean                       |true if this is the first column |
+|doc          |Document                      |The document of the item tree    |

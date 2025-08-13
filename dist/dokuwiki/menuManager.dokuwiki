@@ -1,0 +1,80 @@
+===== Objects =====
+
+
+Zotero : object
+
+===== Typedefs =====
+
+
+MenuOptions : object
+
+
+
+===== Zotero : object =====
+
+**Kind**: global namespace
+
+  * [[#Zotero|Zotero]] : object
+    * [[#Zotero.MenuManager|.MenuManager]]
+      * [[#Zotero.MenuManager.registerMenu|.registerMenu(options)]] ⇒ string | false
+      * [[#Zotero.MenuManager.unregisterMenu|.unregisterMenu(paneID)]] ⇒ boolean
+
+
+
+==== Zotero.MenuManager ====
+
+Manages menu APIs.
+
+**Kind**: static property of [[#Zotero|Zotero]]
+
+  * [[#Zotero.MenuManager|.MenuManager]]
+    * [[#Zotero.MenuManager.registerMenu|.registerMenu(options)]] ⇒ string | false
+    * [[#Zotero.MenuManager.unregisterMenu|.unregisterMenu(paneID)]] ⇒ boolean
+
+
+
+=== MenuManager.registerMenu(options) ⇒ string | false ===
+
+Register custom menu
+
+**Kind**: static method of [[#Zotero.MenuManager|MenuManager]]
+
+^Param  ^Type                        ^
+|options|[[#MenuOptions|MenuOptions]]|
+
+
+
+=== MenuManager.unregisterMenu(paneID) ⇒ boolean ===
+
+Unregister custom menu
+
+**Kind**: static method of [[#Zotero.MenuManager|MenuManager]]
+
+^Param ^Type  ^
+|paneID|string|
+
+
+
+===== MenuOptions : object =====
+
+**Kind**: global typedef\\
+**Properties**
+
+^Name               ^Type            ^Description                                                                                                                                                                                                                                                                                                                   ^
+|menuType           |string          |The type of the menu item                                                                                                                                                                                                                                                                                                     |
+|[l10nID]           |string          |The l10n ID for the menu item                                                                                                                                                                                                                                                                                                 |
+|[l10nArgs]         |object          |Arguments for the l10n ID                                                                                                                                                                                                                                                                                                     |
+|[icon]             |string          |The icon for the menu item - For menu icons, it is recommended to use an SVG icon with a size of 16x16. Use ''%%fill="context-fill"%%'' in the SVG to use the default icon color for automatic hover and dark mode support.                                                                                                   |
+|[darkIcon]         |string          |The dark icon for the menu item - If not provided, the light icon will be used for both light and dark mode.                                                                                                                                                                                                                  |
+|[enableForTabTypes]|Array.<string>  |The type of tab for which the menu item should be enabled. Available types are “library”, “reader/*“,”reader/pdf”, “reader/epub”, “reader/snapshot”, but other types are allowed as well for custom tab types. By default, the menu item is always enabled. Only for main window menubar menus and reader window menubar menus|
+|[onShowing]        |function        |Function to run when the menu is about to be shown                                                                                                                                                                                                                                                                            |
+|[onShown]          |function        |Function to run when the menu is shown                                                                                                                                                                                                                                                                                        |
+|[onHiding]         |function        |Function to run when the menu is about to be hidden                                                                                                                                                                                                                                                                           |
+|[onHidden]         |function        |Function to run when the menu is hidden                                                                                                                                                                                                                                                                                       |
+|[onCommand]        |function        |Function to run when the menu is clicked                                                                                                                                                                                                                                                                                      |
+|[menus]            |Array.<MenuData>|The menu items to add to the menu                                                                                                                                                                                                                                                                                             |
+|menuID             |string          |The unique ID of the menu                                                                                                                                                                                                                                                                                                     |
+|pluginID           |string          |The ID of the plugin registering the menu                                                                                                                                                                                                                                                                                     |
+|target             |string          |The target for the menu                                                                                                                                                                                                                                                                                                       |
+|[l10nFiles]        |Array.<string>  |The l10n files to load for the menu                                                                                                                                                                                                                                                                                           |
+|[menus]            |Array.<MenuData>|The menu items to add to the menu                                                                                                                                                                                                                                                                                             |

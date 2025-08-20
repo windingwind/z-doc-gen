@@ -78,6 +78,5 @@ Unregister custom menu
 | menuID | <code>string</code> | The unique ID of the menu |
 | pluginID | <code>string</code> | The ID of the plugin registering the menu |
 | target | <code>string</code> | The target for the menu |
-| [l10nFiles] | <code>Array.&lt;string&gt;</code> | The l10n files to load for the menu |
 | [menus] | <code>Array.&lt;MenuData&gt;</code> | The menu items to add to the menu |
 
